@@ -8,6 +8,9 @@ A minimal FastAPI backend with:
 
 - `GET /` — returns a message confirming the API is running.
 - `/docs` — interactive API documentation.
+- `POST /chat` — accepts a required text message and returns a fixed reply.
+  Leading and trailing whitespace is removed; empty or whitespace-only
+  messages are rejected with HTTP 422.
 
 ## Run locally
 
@@ -31,3 +34,23 @@ Open:
 - Interactive documentation: http://127.0.0.1:8000/docs
 
 Press Control + C in the terminal to stop the server.
+
+## Test the chat endpoint
+
+With the server running, open http://127.0.0.1:8000/docs.
+
+Expand `POST /chat`, click **Try it out**, and submit:
+
+```json
+{"message": "How do I reset my password?"}
+```
+
+Expected response: HTTP 200 with:
+
+```json
+{"reply": "Thanks for your message. Support is on the way."}
+```
+
+Requests with a missing, empty, or whitespace-only message return HTTP 422.
+
+The reply is currently fixed; no AI model is connected yet.
