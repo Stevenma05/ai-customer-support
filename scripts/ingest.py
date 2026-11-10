@@ -11,7 +11,7 @@ load_dotenv()
 Path(__file__).resolve().parent finds the folder containing ingest.py.
 / "knowledge_base" builds the path to your policy folder.
 """
-knowledge_base = Path(__file__).resolve().parent / "knowledge_base"
+knowledge_base = Path(__file__).resolve().parent.parent / "knowledge_base"
 
 # Split into chunks of 700 characters with 100 characters overlapping
 splitter = RecursiveCharacterTextSplitter(

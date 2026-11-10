@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 from openai import OpenAI
 import os
-from search import retrieve_policies
+from app.search import retrieve_policies
 
 load_dotenv()
 

@@ -10,7 +10,7 @@ from fastapi.testclient import TestClient
 import httpx2 as httpx
 from openai import APIConnectionError
 
-from main import app
+from app.main import app
 
 client = TestClient(app)
 def test_chat_rejects_missing_message():
@@ -39,7 +39,7 @@ def test_chat_returns_reply(monkeypatch):
         assert message == "How do I reset my password?"
         return "This is a test reply."
 
-    monkeypatch.setattr("main.generate_reply", fake_generate_reply)
+    monkeypatch.setattr("app.main.generate_reply", fake_generate_reply)
 
     response = client.post(
         "/chat",
@@ -57,7 +57,7 @@ def test_chat_handles_ai_failure(monkeypatch):
             request=httpx.Request("POST", "https://api.openai.com/v1/responses")
         )
 
-    monkeypatch.setattr("main.generate_reply", fake_generate_reply)
+    monkeypatch.setattr("app.main.generate_reply", fake_generate_reply)
 
     response = client.post(
         "/chat",

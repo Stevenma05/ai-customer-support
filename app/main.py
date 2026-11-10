@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, ConfigDict
-from ai_service import generate_reply
+from app.ai_service import generate_reply
 from openai import APIError
 
 class ChatRequest(BaseModel):
