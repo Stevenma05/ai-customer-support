@@ -7,6 +7,8 @@ The file and function names start with test_ so pytest can discover them.
 '''
 
 from fastapi.testclient import TestClient
+import httpx2 as httpx
+from openai import APIConnectionError
 
 from main import app
 
@@ -47,4 +49,22 @@ def test_chat_returns_reply(monkeypatch):
     assert response.status_code == 200
     assert response.json() == {
         "reply": "This is a test reply."
+    }
+    
+def test_chat_handles_ai_failure(monkeypatch):
+    def fake_generate_reply(message: str) -> str:
+        raise APIConnectionError(
+            request=httpx.Request("POST", "https://api.openai.com/v1/responses")
+        )
+
+    monkeypatch.setattr("main.generate_reply", fake_generate_reply)
+
+    response = client.post(
+        "/chat",
+        json={"message": "How do I reset my password?"},
+    )
+
+    assert response.status_code == 502
+    assert response.json() == {
+        "detail": "The AI service could not complete the request."
     }

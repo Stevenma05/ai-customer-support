@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field, ConfigDict
 from ai_service import generate_reply
+from openai import APIError
 
 class ChatRequest(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True) # Remove whitespaces from beginning and end of string (Make sure whitespace is not considered as input)
@@ -21,5 +22,12 @@ def root():
 # Chat endpoint
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    reply = generate_reply(request.message)
+    try:
+        reply = generate_reply(request.message)
+    except APIError as error:
+        raise HTTPException(
+            status_code=502,
+            detail="The AI service could not complete the request."
+        ) from error
+    
     return {"reply": reply}
