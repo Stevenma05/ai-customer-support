@@ -11,18 +11,6 @@ from fastapi.testclient import TestClient
 from main import app
 
 client = TestClient(app)
-
-def test_chat_returns_reply():
-    response = client.post(
-        "/chat",
-        json={"message": "How do I reset my password?"},
-    )
-    
-    assert response.status_code == 200
-    assert response.json() == {
-        "reply": "Thanks for your message. Support is on the way."
-    }
-    
 def test_chat_rejects_missing_message():
     response = client.post(
         "/chat", json={}
@@ -43,3 +31,20 @@ def test_chat_rejects_whitespace_message():
     )
     
     assert response.status_code == 422
+    
+def test_chat_returns_reply(monkeypatch):
+    def fake_generate_reply(message: str) -> str:
+        assert message == "How do I reset my password?"
+        return "This is a test reply."
+
+    monkeypatch.setattr("main.generate_reply", fake_generate_reply)
+
+    response = client.post(
+        "/chat",
+        json={"message": "How do I reset my password?"},
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "reply": "This is a test reply."
+    }

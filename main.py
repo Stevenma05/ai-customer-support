@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field, ConfigDict
+from ai_service import generate_reply
 
 class ChatRequest(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True) # Remove whitespaces from beginning and end of string (Make sure whitespace is not considered as input)
@@ -20,4 +21,5 @@ def root():
 # Chat endpoint
 @app.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    return {"reply": "Thanks for your message. Support is on the way."}
+    reply = generate_reply(request.message)
+    return {"reply": reply}
