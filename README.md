@@ -71,3 +71,17 @@ uv run python -m pytest -v
 
 The tests check that `/chat` accepts a valid message and rejects missing,
 empty, and whitespace-only messages. No running server or API key is needed.
+
+## Configure OpenAI
+
+Copy the example configuration:
+
+```bash
+cp .env.example .env
+```
+
+Open `.env` and set `OPENAI_API_KEY` to your own OpenAI API key.
+The application loads this file using python-dotenv.
+
+Real chat requests use the OpenAI API and incur usage charges.
+Automated endpoint tests replace the AI function and make no OpenAI requests.
