@@ -42,15 +42,32 @@ With the server running, open http://127.0.0.1:8000/docs.
 Expand `POST /chat`, click **Try it out**, and submit:
 
 ```json
-{"message": "How do I reset my password?"}
+{ "message": "How do I reset my password?" }
 ```
 
 Expected response: HTTP 200 with:
 
 ```json
-{"reply": "Thanks for your message. Support is on the way."}
+{ "reply": "Thanks for your message. Support is on the way." }
 ```
 
 Requests with a missing, empty, or whitespace-only message return HTTP 422.
 
 The reply is currently fixed; no AI model is connected yet.
+
+## Run tests
+
+Install the project dependencies, including development tools:
+
+```bash
+uv sync
+```
+
+Run the automated tests:
+
+```bash
+uv run python -m pytest -v
+```
+
+The tests check that `/chat` accepts a valid message and rejects missing,
+empty, and whitespace-only messages. No running server or API key is needed.
